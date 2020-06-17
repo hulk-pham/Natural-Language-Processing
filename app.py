@@ -1,28 +1,23 @@
 from flask import Flask
 from underthesea import sentiment
 from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Resource, Api, reqparse
+from module.SentimentAnalysis import SentimentAnalysis
+from module.NER import NER
+
 app = Flask(__name__)
+api = Api(app)
+parser = reqparse.RequestParser()
 # app.config.from_object(os.environ['APP_SETTINGS'])
 
 
 @app.route('/')
 def hello():
-    return "Hello World!"
+    return "Welcome to NLP Server !"
 
 
-@app.route('/<name>')
-def name(name):
-    return "Hello world {}".format(name)
-
-
-@app.route('/api/sentiment-analysis')
-def sentiments():
-    text = sentiment(
-        'hàng kém chất lg,chăn đắp lên dính lông lá khắp người. thất vọng')
-    print(text)
-    print(sentiment(
-        'Sản phẩm hơi nhỏ so với tưởng tượng nhưng chất lượng tốt, đóng gói cẩn thận.'))
-    return "Check Log"
+api.add_resource(SentimentAnalysis, '/api/sentiment-analysis')
+api.add_resource(NER, '/api/ner')
 
 
 if __name__ == '__main__':
